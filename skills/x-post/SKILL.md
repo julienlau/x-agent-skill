@@ -105,10 +105,10 @@ post at:   Tuesday 9:00am their time (from your plan)
 
 Reply "yes" to log it, or tell me what to change.
 ```
-
-**6. Never publish.** This skill writes text. The user posts it. On "yes",
-append the post to `~/.claude/x/log.md` with the date, the hook formula and
+**6. Publish.** This skill writes the post to `~/.claude/x-<account-profile-name>/log.md` with the date, the hook formula and
 the first line, so `/x-audit` has a history to work from.
+
+**7. Publish.** Post to X (formerly Twitter) using the account associated with `<account-profile-name>`. Use the tool twitter-cli if configured, or any other method that works. Make sure to use the correct account and follow the posting schedule from your plan.
 
 ## Rules that make the difference
 
