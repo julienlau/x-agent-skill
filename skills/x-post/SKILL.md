@@ -20,19 +20,34 @@ python3 hookscore.py --hook "one line"     # five-property hook panel + formula 
 python3 hookscore.py hooks.txt             # rank several options
 python3 count.py post.txt                  # X's weighted count + six lints
 python3 count.py post.txt --premium        # long post: shows where "Show more" cuts
+python3 account.py paths                   # which account, which voice, where their files are
 ```
+
+`account.py` is shared by the whole pack. It also sets up accounts
+(`init`), switches the default one (`use pd`), and publishes safely
+(`verify`, `exec`, `cookie`). Run it with `--help` for the details.
 
 `hooks.json` holds the 21 formulas: template, filled example, what each is
 for, the way each usually gets ruined, and the regex that names it.
 
+## Account and voice
+
+Run `python3 account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Before you write
 
-1. Read `~/.claude/x/voice.md` if it exists. That is the user's voice
-   profile. If it does not exist, ask for **five of their own recent posts**,
-   infer the voice, and write the file from `templates/voice.md`. Do not
-   invent a voice. A post in the wrong voice is worse than no post.
+1. Read the voice file `paths` printed. That is the user's voice profile.
+   If it is missing or still the blank template, ask for **five of their
+   own recent posts** from this account, infer the voice, and fill the file
+   in (`templates/voice.md` is the shape). Do not invent a voice. A post in
+   the wrong voice is worse than no post.
 2. Read `hooks.json`. All 21.
-3. Read `~/.claude/x/swipe.md` if `/x-viral` has run. If a formula is
+3. Read the account's `swipe.md` if `/x-viral` has run. If a formula is
    over-indexing in the user's niche right now, prefer it when it fits.
 4. If the idea is thin ("post about AI"), do not pad it. Ask one batched
    question: what happened, to whom, and what did it cost or return. A post
@@ -98,17 +113,42 @@ be pasted. Then:
 
 ```
 POST READY
+account:   pd (@pepitedata), voice founder, publish via twitter-cli
 hook:      #9 Time Anchor  (score 81 STRONG)
 length:    187 / 280
 humanizer: 3 artefacts stripped, human score 91 PASS
-post at:   Tuesday 9:00am their time (from your plan)
+post at:   Tuesday 9:00am Europe/Paris (from the plan)
 
-Reply "yes" to log it, or tell me what to change.
+Reply "yes" to log and publish it, or tell me what to change.
 ```
-**6. Publish.** This skill writes the post to `~/.claude/x-<account-profile-name>/log.md` with the date, the hook formula and
-the first line, so `/x-audit` has a history to work from.
 
-**7. Publish.** Post to X (formerly Twitter) using the account associated with `<account-profile-name>`. Use the tool twitter-cli if configured, or any other method that works. Make sure to use the correct account and follow the posting schedule from your plan.
+Take `account`, `voice` and `publish` from `account.py paths` (its `poster`
+line), and `post at` from `plan.md` in the account's timezone. If that time
+is later than now, say so: on "yes" the post goes out now, so the user can
+also come back at that time.
+
+**6. Log.** On "yes", append the post to the account's `log.md` with the
+date, the hook formula and the first line, so `/x-audit` has a history to
+work from.
+
+**7. Publish.** Only after that explicit "yes", and only to the account
+`paths` resolved. Follow its `poster`:
+
+- `twitter-cli`: run `python3 account.py verify`. Exit 3 means twitter-cli
+  is logged in as a different account: stop, post nothing, and show the
+  user both handles. On `ok`, run
+  `python3 account.py exec -- twitter post "<the post>"` and add the
+  returned post URL to the log line.
+- `browser`: run `python3 account.py cookie`. It writes the account's raw
+  cookie header to a file and prints the path. Give that file to the
+  browser tool to set the x.com cookies. Do not print or paste its
+  contents. Open x.com/home, check that the profile link in the side nav is
+  the account's handle, and stop on a mismatch. Then compose, post, and add
+  the post URL to the log line.
+- `none`: the block above is the deliverable. The user posts it.
+
+If publishing fails, say so plainly. The post is already in the log, so
+mark that line `not published`.
 
 ## Rules that make the difference
 

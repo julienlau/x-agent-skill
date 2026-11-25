@@ -21,6 +21,15 @@ One tool lives in this folder and it runs:
 python3 audit.py account_analytics_content.csv
 ```
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Input
 
 In order of preference:
@@ -35,7 +44,7 @@ In order of preference:
    user can see. Twenty rows is enough for a first pass.
 3. **Screenshots** of the posts with their numbers. Transcribe into a CSV.
 
-Also read `~/.claude/x/log.md` if it exists: it records which hook formula
+Also read the account's `log.md` if it exists: it records which hook formula
 each post used.
 
 ## What it measures, and why not impressions

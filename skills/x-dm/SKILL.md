@@ -15,6 +15,15 @@ cold DMs every day, and most of them land in message requests, unread. The
 ones that get opened come from a name the reader already recognises, because
 it has been in their replies.
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Before writing, get the specifics
 
 Ask, in one batched question:

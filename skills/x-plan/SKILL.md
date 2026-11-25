@@ -18,9 +18,18 @@ One tool lives in this folder:
 python3 weights.py          # what X's ranker rewards and punishes, live from X's own code
 ```
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Input
 
-Read these if they exist: `~/.claude/x/voice.md`, `log.md` (what was posted,
+Read these if they exist: the account's voice file, `log.md` (what was posted,
 with which formula), `swipe.md` (what is working in the niche, from
 `/x-viral`) and the last `/x-audit` result. The plan should not repeat a theme
 from the last fortnight, and it should lean on what the user's own evidence
@@ -117,5 +126,6 @@ ENGAGE  (5 reach / 3 peers / 2 buyers)
 Say "write Tuesday" and I will draft it.
 ```
 
-Write the plan to `~/.claude/x/plan.md` so the other skills can read it.
+Write the plan to the account's `plan.md` so the other skills can read it.
+Give posting times in the `timezone` from `account.md`.
 Nothing is scheduled or posted anywhere. This is a plan, and the user runs it.

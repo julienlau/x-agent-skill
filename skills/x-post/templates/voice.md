@@ -1,11 +1,13 @@
-# voice.md
+# voice: {{voice}}
 
-Copy this to `~/.claude/x/voice.md` and fill it in. Every skill in the pack
-reads it. Ten minutes here is the difference between drafts you post and
-drafts you rewrite.
+This file lives at `<home>/voices/{{voice}}.md`. Any account can use it: set
+`voice: {{voice}}` in that account's `account.md`, or ask for it by name ("in
+my {{voice}} voice"). `python3 account.py init` creates it from this template.
+Fill it in. Every skill in the pack reads it. Ten minutes here is the
+difference between drafts you post and drafts you rewrite.
 
 If you would rather not fill it in by hand, paste five of your own recent
-posts into Claude and say "write my voice.md from these". That works better
+posts and say "write my {{voice}} voice from these". That works better
 than guessing at the answers.
 
 ---

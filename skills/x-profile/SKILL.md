@@ -15,6 +15,15 @@ they liked, give it about four seconds, and either follow or leave. Those four
 seconds are the bio's first line, the pinned post, and the last two things you
 posted. Everything here is in service of that visit.
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Input
 
 Ask the user to paste: display name, username, bio, website, what is pinned

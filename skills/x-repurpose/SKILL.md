@@ -13,6 +13,15 @@ description: >-
 One good long asset holds five to eight X posts and a thread. Most people
 post one link to it and throw the rest away.
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Input
 
 A transcript, article, newsletter, script, or call summary. If the user gives

@@ -46,10 +46,87 @@ Project-local instead of global: copy the same folders into your repo's
 top of a chat and it runs as a mode. You lose the Python tools, which is most
 of the point of `/x-post`, `/x-viral` and `/x-human`, but the rest works.
 
-Then spend ten minutes on [`templates/voice.md`](templates/voice.md). Copy it
-to `~/.claude/x/voice.md` and fill it in, or paste five of your own posts into
-Claude and say "write my voice.md from these". Every skill reads that file.
-Skip it and everything comes out sounding like everyone else on the timeline.
+Then set up your accounts. Pick a workdir (any folder, `~/agents` below) and
+create one account per X handle, each with a short name to switch with:
+
+```bash
+python3 skills/x-post/account.py init pepitedata --short pd --home ~/agents --voice founder --handle @pepitedata
+python3 skills/x-post/account.py init kreamedge  --short ke --voice founder --handle @kreamedge
+python3 skills/x-post/account.py use pd        # the default account; "post this as ke" overrides it
+python3 skills/x-post/account.py list
+```
+
+`--home` is needed once. It is saved to `~/.config/x-agent/config`, and
+`$X_AGENT_HOME` overrides it. There is no built-in default, so a skill that
+finds no workdir asks you where to put it. Per run, `$X_AGENT_ACCOUNT` and
+`$X_AGENT_VOICE` override the saved choices, and so does naming an account
+or voice in the request ("as ke", "in my founder voice").
+
+```
+~/agents/
+  voices/founder.md        voices, shared by every account
+  x-pepitedata/            one folder per account
+    account.md             short name, handle, default voice, timezone, poster
+    log.md plan.md swipe.md
+    twitter.env            optional: the account's X login, for publishing
+```
+
+Then spend ten minutes on each voice file `init` created (the template is
+[`skills/x-post/templates/voice.md`](skills/x-post/templates/voice.md)). Fill
+it in, or paste five of your own posts and say "write my founder voice from
+these". Every skill reads it. Skip it and everything comes out sounding like
+everyone else on the timeline.
+
+### Publishing (optional)
+
+Without a login, `/x-post` stops at a copy-ready block. To let it publish
+after your explicit "yes", put the account's login in
+`x-<name>/twitter.env` and `chmod 600` it. Never commit it.
+
+```
+TWITTER_COOKIE="auth_token=...; ct0=...; twid=..."   # raw Cookie header of a logged-in x.com request
+```
+
+`account.md`'s `poster:` decides how the post goes out:
+
+- `twitter-cli` uses [twitter-cli](https://github.com/jackwener/twitter-cli).
+  `account.py verify` checks that the logged-in handle is the account's
+  before anything is posted.
+- `browser` gives the same cookie header, through `account.py cookie`, to
+  the agent's browser tool.
+- `auto` (the default) picks whichever is available.
+
+`account.py` drops any `TWITTER_*` variables set in your shell, so one
+account's login never reaches another.
+
+Account names here are not twitter-cli account names. twitter-cli (0.8.5)
+has no named accounts. Each run uses one login: `TWITTER_AUTH_TOKEN` +
+`TWITTER_CT0`, or cookies read from a browser
+(`TWITTER_BROWSER`, `TWITTER_CHROME_PROFILE="Profile 2"`). So each
+account's `twitter.env` is what ties a skill account to an X login:
+
+```
+TWITTER_COOKIE="auth_token=...; ct0=..."             # a cookie header, or
+TWITTER_BROWSER=chrome
+TWITTER_CHROME_PROFILE=Profile 2                     # the Chrome profile logged in as this account
+```
+
+Keep `verify` before every post. If the stored cookies are rejected,
+twitter-cli falls back to scanning every browser and Chrome profile. It
+also falls back if the Chrome profile it was given is not found. Either way
+it can post from whichever account it finds first. `twitter whoami` also
+reads the first entry of X's account-switcher list, which may not be the
+active account when several are logged in in one browser.
+
+### Coming from 1.x
+
+Your files used to live in `~/.claude/x/`. Move them:
+
+```bash
+python3 skills/x-post/account.py init <name> --short <s> --home ~/agents --voice <name>
+mv ~/.claude/x/{log,plan,swipe}.md ~/agents/x-<name>/ 2>/dev/null
+mv ~/.claude/x/voice.md ~/agents/voices/<name>.md     # replaces the blank template
+```
 
 ## The eleven
 
@@ -157,7 +234,7 @@ niche is The Hottest New and Field Report" instead of "posts that did well".
 ```bash
 python3 skills/x-viral/pull.py urls.txt > swipe.tsv
 # fill in the views column from the posts, they are public on every post
-python3 skills/x-viral/swipe.py swipe.tsv --out ~/.claude/x/swipe.md
+python3 skills/x-viral/swipe.py swipe.tsv --out "$(python3 skills/x-post/account.py path swipe)"
 ```
 
 Raw numbers are not evidence. An account with 900,000 followers doing 400,000
@@ -285,6 +362,8 @@ your name. If a draft needs a number you have not given, it comes back with
 skills/x-post/hooks.json         21 hook formulas: template, example, use, trap, match regex
 skills/x-post/hookscore.py       five-property hook panel + formula classifier
 skills/x-post/count.py           X's weighted character count + six lints
+skills/x-post/account.py         accounts, voices, paths, safe publishing
+skills/x-post/templates/         account.md and voice.md, used by account.py init
 skills/x-thread/thread.py        draft -> thread that fits, five thread lints
 skills/x-viral/pull.py           post URLs -> swipe sheet, via X's oEmbed API
 skills/x-viral/swipe.py          outlier ranking + hook / structure / format breakdown
@@ -294,11 +373,11 @@ skills/x-human/slop.json         176 terms, 18 invisible classes, 18 structural 
 skills/x-human/humanize.py       the three cleaning passes
 skills/x-human/detect.py         the five-check panel
 skills/x-profile/rubric.json     the 100-point profile score
-templates/voice.md               your voice profile. Fill this in first.
 ```
 
-Your own files live in `~/.claude/x/`: `voice.md`, `plan.md`, `log.md` and
-`swipe.md`. The skills read each other's.
+Your own files live in your workdir: `voices/*.md`, plus `account.md`,
+`plan.md`, `log.md` and `swipe.md` in each `x-<name>/`. The skills read each
+other's, always for the active account.
 
 ## Credit
 

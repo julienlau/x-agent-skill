@@ -19,6 +19,15 @@ in it keeps getting served. A post the author abandoned does not.
 But the value is not equal across replies, so this skill sorts before it
 writes.
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Input
 
 The user pastes the replies, ideally with handles. Screenshots are fine. Do

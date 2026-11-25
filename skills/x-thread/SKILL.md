@@ -26,6 +26,15 @@ Posts break at your own `---` lines first, then at paragraphs, then at
 sentences. A sentence longer than a whole post is the only thing that gets
 split between words, and it is flagged when it happens.
 
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
+
 ## Thread, long post, or single post
 
 Decide this before writing anything, and say which one and why:
@@ -87,4 +96,4 @@ Reply "yes" to log it, or tell me which post to change.
 
 Nothing is posted by this skill. The user posts post 1, then replies to it
 with post 2, and so on, or pastes them into X's composer with the + button.
-On "yes", log post 1 to `~/.claude/x/log.md` with the formula.
+On "yes", log post 1 to the account's `log.md` with the formula.

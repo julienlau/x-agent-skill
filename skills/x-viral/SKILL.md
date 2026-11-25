@@ -21,8 +21,17 @@ Two tools live in this folder and both run:
 
 ```bash
 python3 pull.py urls.txt > swipe.tsv                      # URLs you picked -> exact text, format, date
-python3 swipe.py swipe.tsv --out ~/.claude/x/swipe.md     # rank, break down, write the swipe file
+python3 swipe.py swipe.tsv --out "$(python3 ../x-post/account.py path swipe)"   # rank, break down, write the swipe file
 ```
+
+## Account and voice
+
+Run `python3 ../x-post/account.py paths` first. It prints the active X account, its
+voice file, and the `log.md`, `plan.md` and `swipe.md` paths this skill reads
+and writes. If the request names an account or a voice ("as pd", "in my
+founder voice"), pass `--account pd` or `--voice founder`. Exit 2 means a
+choice only the user can make (no workdir yet, which account, which voice):
+ask them, then run it again. Write everything in that voice, for that account.
 
 ## The one idea that makes this worth doing
 
@@ -85,7 +94,7 @@ replies, reposts if you have them) from what is on screen.
 ## Step 4: rank and break down
 
 ```bash
-python3 swipe.py swipe.tsv --out ~/.claude/x/swipe.md
+python3 swipe.py swipe.tsv --out "$(python3 ../x-post/account.py path swipe)"
 ```
 
 For every post it computes the outlier multiple over that account's own
@@ -120,7 +129,7 @@ research and horoscopes.
 ## Step 6: recreate them for the user
 
 For the top three, write **the user's version**: their own story, their own
-number, their audience, in the shape that is working. Read `voice.md` first.
+number, their audience, in the shape that is working. Read the voice file first.
 Each one:
 
 ```
@@ -138,7 +147,7 @@ up tomorrow.
 ## Output
 
 The ranked list, the three findings, the unclassified hooks, and three
-recreated posts. The swipe file goes to `~/.claude/x/swipe.md`, where
+recreated posts. The swipe file goes to the account's `swipe.md`, where
 `/x-post` and `/x-plan` read it, so after this runs once the rest of the pack
 is working from the user's niche instead of from defaults.
 

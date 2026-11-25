@@ -25,7 +25,7 @@ Input is the TSV pull.py writes, with the numbers filled in by you:
 
 Usage
   python3 swipe.py swipe.tsv
-  python3 swipe.py swipe.tsv --out ~/.claude/x/swipe.md
+  python3 swipe.py swipe.tsv --out "$(python3 ../x-post/account.py path swipe)"
   python3 swipe.py swipe.tsv --min-posts 4 --json
 """
 
